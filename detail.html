@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Movie</title>
+    <link rel="stylesheet" href="/css/styleDetail.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="row">
+          <div class="col-2">
+            <img
+              src="https://image.tmdb.org/t/p/w1280/lPsD10PP4rgUGiGR4CCXA6iY0QQ.jpg"
+              alt=""
+              srcset=""
+              class="posterPath"
+              id="posterPath"
+            />
+          </div>
+          <div class="col-2">
+            <div class="movie_info">
+              <h1 id="originalTitle"></h1>
+              <h2 id="genres"></h2>
+              <h3 id="releaseDate"></h3>
+              <p id="overView"></p>
+              <a class="btn" id="btnTrailer" onclick="toggle();">Trailer </a>
+              <a href="/index.html" class="btnHome">Home </a>
+            </div>
+            <br />
+            <!-- <div id="imgCompany" class="imgCompanyDiv"></div> -->
+          </div>
+          <div class="trailer" id="trailer">
+            <iframe
+              width="560"
+              height="315"
+              id="iframe"
+              src="asac"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+            <img
+              src="/images/close.png"
+              onclick="toggle();"
+              class="close"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="/js/javascript.js"></script>
