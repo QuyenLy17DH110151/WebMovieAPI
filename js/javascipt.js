@@ -5,6 +5,9 @@ const IMGPATH = "https://image.tmdb.org/t/p/w1280";
 const SEARCHURL =
   "https://api.themoviedb.org/3/search/movie?api_key=3b0c7bd2453a463c1077f77f3e23aa0a&language=en-US&query=";
 const NotAdult = "&include_adult=false";
+let PageNum = 0;
+let NewURL = "";
+let SEARCHURLNEW = "";
 // TODO DOM
 const main = document.getElementById("main");
 const form = document.getElementById("form");
@@ -12,17 +15,28 @@ const form1 = document.getElementById("form1");
 const search = document.getElementById("search");
 const pageNum = document.getElementById("pageNum");
 // TODO Create HTML
-getMovie(APIURL);
+// getMovie(APIURL);
+
 async function getMovie(url) {
   const resp = await fetch(url);
-  const respData = await resp.json();
-  ShowMovie(respData);
-  console.log(respData);
+  let respData = await resp.json();
+  console.log(respData.page);
+  PageNum = respData.page;
+  return respData;
 }
-getMovie();
-
-function ShowMovie(respData) {
+ShowMovie();
+async function ShowMovie() {
+  let respData = await getMovie(APIURL);
+  if (NewURL != "") {
+    respData = await getMovie(NewURL);
+    NewURL = "";
+  }
+  console.log("data", respData);
+  ShowPage(respData.page);
   main.innerHTML = "";
+  if (respData.errors != null) {
+    location.href = "error.html";
+  }
   respData.results.forEach((movie) => {
     const movieEl = document.createElement("div");
     movieEl.classList.add("movie");
@@ -64,21 +78,62 @@ function getClassByVote(vote) {
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const inputSearch = search.value;
+  console.log(inputSearch);
   if (inputSearch) {
-    getMovie(SEARCHURL + inputSearch + NotAdult);
+    // console.log("search", SEARCHURL + inputSearch + NotAdult);
+    // getMovie(SEARCHURL + inputSearch + NotAdult);
+    NewURL = SEARCHURL + inputSearch + NotAdult;
+    ShowMovie();
     search.value = "";
-  } else {
-    getMovie(APIURL);
   }
 });
 // TODO Nhập INput Page
 form1.addEventListener("submit", (e) => {
   e.preventDefault();
-  const inputPage = pageNum.value;
+  let inputPage = pageNum.value;
   if (inputPage) {
-    getMovie(APIURL + inputPage);
+    NewURL = APIURL + inputPage;
+    ShowMovie();
     pageNum.value = "";
   } else {
-    getMovie(APIURL + 1);
+    ShowMovie();
   }
 });
+function Popular() {
+  NewURL =
+    "https://api.themoviedb.org/3/movie/popular?api_key=3b0c7bd2453a463c1077f77f3e23aa0a&language=en-US&page=";
+  console.log("Popular", APIURL);
+  ShowMovie();
+}
+function TopRated() {
+  NewURL =
+    "https://api.themoviedb.org/3/movie/top_rated?api_key=3b0c7bd2453a463c1077f77f3e23aa0a&language=en-US&page=";
+  console.log("TopRated", APIURL);
+  ShowMovie();
+}
+function Upcoming() {
+  NewURL =
+    "https://api.themoviedb.org/3/movie/upcoming?api_key=3b0c7bd2453a463c1077f77f3e23aa0a&language=en-US&page=";
+  console.log("APIURL");
+  ShowMovie();
+}
+function ShowPage(numPage) {
+  let numberPage = document.getElementById("NumberPage");
+  numberPage.innerHTML = `Page : ${numPage}`;
+  console.log("numPage", numPage);
+}
+async function NextPage() {
+  // let respData = await getMovie(APIURL);
+  // let count = respData.page;
+  NewURL = APIURL + (PageNum + 1);
+  getMovie(NewURL);
+  // console.log("NewURL", NewURL, APIURL, respData.page);
+  // console.log("pageNum", respData.page);
+  ShowMovie();
+  // NewURL = "";
+}
+function BackPage() {
+  NewURL = APIURL + (PageNum + -1);
+  getMovie(NewURL);
+  ShowMovie();
+}
